@@ -451,3 +451,27 @@ DELIVERY_ID=$(cat deliveryresponse.json | jq -r .deliveryId)
 
 curl -v -k "https://$EXTERNAL_INGEST_FQDN/v0.1.0/api/deliveries/$DELIVERY_ID" --header 'Accept: application/json' 
 ```
+
+## :broom: Clean up
+
+1. Delete the resource group that contains all the resources
+
+   ```bash
+   az group delete -n rg-shipping-dronedelivery-${LOCATION} -y
+   az group delete -n rg-shipping-dronedelivery-${LOCATION}-acr -y
+   ```
+
+1. Purge deleted Key Vaults related to this deployment.
+
+   ```bash
+   az keyvault list-deleted --query [].name -o tsv
+
+   # Per Key Vault that was related to this deployment (should be five of them)
+   az keyvault purge -n <name>
+   ```
+
+## Contributions
+
+Please see our [contributor guide](./CONTRIBUTING.md).
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact <opencode@microsoft.com> with any additional questions or comments.
